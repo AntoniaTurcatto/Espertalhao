@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Big Mind</string>
+    <string name="action_settings">Settings</string>
+    <string name="cadastroConteudoButton">Register school subjects</string>
+    <string name="cadastroPerguntasButton">Register questions</string>
+    <string name="visualizacaoPerguntasButton">Visualize qustions registered</string>
+    <string name="title_activity_cadastro_conteudo">CadastroConteudoActivity</string>
+    <string name="title_activity_cadastro_pergunta">CadastroPerguntaActivity</string>
+
+    <string name="statement">Statement</string>
+    <string name="statementHint">Write here a statement for the qustion:</string>
+
+    <string name="optionA">Option A</string>
+    <string name="optionB">Option B</string>
+    <string name="optionC">Option C</string>
+    <string name="optionD">Option D</string>
+    <string name="optionE">Option E</string>
+
+    <string name="rightOption">Right option</string>
+
+    <string name="schoolSubject">School subject</string>
+
+    <string name="register">Register</string>
+
+    <string name="select">--Select--</string>
+    <string name="exactSciences">Exact Sciences</string>
+    <string name="humanSciences">Human Sciences</string>
+    <string name="languages">Languages</string>
+
+    <string name="registerSuccess">The register of %1$s, of the type %2$d and id %3$d was successful!</string>
+    <string name="registerQuestionSuccess">The register of the question %1$s was successful!</string>
+    <string name="alert">Fill in all the fields!</string>
+
+</resources>

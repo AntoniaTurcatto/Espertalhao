@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Espertalhão</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_cadastro_pergunta">CadastroPerguntaActivity</string>
+    <string name="title_activity_cadastro_conteudo">CadastroConteudoActivity</string>
+
+    <string name="cadastroConteudoButton">Cadastrar conteúdo</string>
+    <string name="cadastroPerguntasButton">Cadastrar perguntas</string>
+    <string name="visualizacaoPerguntasButton">Visualizar perguntas</string>
+
+    <string name="statement">Enunciado</string>
+    <string name="statementHint">Digite aqui o enunciado da pergunta:</string>
+
+    <string name="optionA">Opção A</string>
+    <string name="optionB">Opção B</string>
+    <string name="optionC">Opção C</string>
+    <string name="optionD">Opção D</string>
+    <string name="optionE">Opção E</string>
+
+    <string name="rightOption">Opção correta</string>
+
+    <string name="schoolSubject">Conteúdo</string>
+    <string name="register">Cadastrar</string>
+
+    <string name="select">--Selecionar--</string>
+    <string name="exactSciences">Exatas</string>
+    <string name="humanSciences">Humanas</string>
+    <string name="languages">Linguagens</string>
+
+    <string name="registerSuccess">%1$s, do tipo %2$d e id %3$d foi cadastrado com sucesso</string>
+    <string name="registerQuestionSuccess">A pergunta %1$s foi cadastrada com sucesso!</string>
+    <string name="alert">Preencha todos os campos!</string>
+
+</resources>

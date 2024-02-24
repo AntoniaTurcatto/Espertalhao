@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".CadastroConteudoActivity"
+    tools:showIn="@layout/activity_cadastro_conteudo">
+
+    <TextView
+        android:id="@+id/textViewTitleCadastroConteudo"
+        style="@style/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="@string/cadastroConteudoButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:id="@+id/linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleCadastroConteudo"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome do Conteudo"
+            style="@style/textViewCadastro"
+            android:layout_marginBottom="6dp"/>
+
+        <EditText
+            android:id="@+id/editTextNomeCadastroConteudo"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_height="50dp"
+            android:inputType="text"
+            android:hint="Nome do conteúdo"
+            style="@style/editText"/>
+
+        <TextView
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo do conteúdo"
+            style="@style/textViewCadastro"
+            android:layout_marginBottom="6dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTipoConteudoCadastroConteudo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/editText"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonCadastrarCadastrarConteudo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        style="@style/buttonSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearlayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

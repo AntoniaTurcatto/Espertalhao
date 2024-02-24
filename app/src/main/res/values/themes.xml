@@ -1,0 +1,9 @@
+
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorError">@color/md_theme_light_error</item>
+        <item name="android:colorBackground">@color/md_theme_light_background</item>
+    </style>
+</resources>
