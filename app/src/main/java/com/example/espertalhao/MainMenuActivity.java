@@ -47,6 +47,14 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(it);
             }
         });
+
+        buttonVisualizaPerguntasMainMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(MainMenuActivity.this, VisualizaPerguntasActivity.class);
+                startActivity(it);
+            }
+        });
     }
 
     @Override

@@ -27,9 +27,21 @@
     <string name="exactSciences">Exact Sciences</string>
     <string name="humanSciences">Human Sciences</string>
     <string name="languages">Languages</string>
+    <string name="error">Error</string>
 
     <string name="registerSuccess">The register of %1$s, of the type %2$d and id %3$d was successful!</string>
     <string name="registerQuestionSuccess">The register of the question %1$s was successful!</string>
     <string name="alert">Fill in all the fields!</string>
+    <string name="title_activity_visualiza_perguntas">VisualizaPerguntasActivity</string>
+
+    <!-- para o carview do recycler -->
+    <string name="schoolSubjectCardView">%1$s</string>
+    <string name="title_activity_visualizacao_detalhada">VisualizacaoDetalhadaActivity</string>
+
+    <string name="a">Option A</string>
+    <string name="b">Option B</string>
+    <string name="c">Option C</string>
+    <string name="d">Option D</string>
+    <string name="e">Option E</string>
 
 </resources>

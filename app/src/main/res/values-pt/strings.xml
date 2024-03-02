@@ -5,6 +5,9 @@
 
     <string name="title_activity_cadastro_pergunta">CadastroPerguntaActivity</string>
     <string name="title_activity_cadastro_conteudo">CadastroConteudoActivity</string>
+    <string name="title_activity_visualiza_perguntas">VisualizaPerguntasActivity</string>
+    <string name="title_activity_visualizacao_detalhada">VisualizacaoDetalhadaActivity</string>
+
 
     <string name="cadastroConteudoButton">Cadastrar conteúdo</string>
     <string name="cadastroPerguntasButton">Cadastrar perguntas</string>
@@ -28,9 +31,19 @@
     <string name="exactSciences">Exatas</string>
     <string name="humanSciences">Humanas</string>
     <string name="languages">Linguagens</string>
+    <string name="error">Erro</string>
 
     <string name="registerSuccess">%1$s, do tipo %2$d e id %3$d foi cadastrado com sucesso</string>
     <string name="registerQuestionSuccess">A pergunta %1$s foi cadastrada com sucesso!</string>
     <string name="alert">Preencha todos os campos!</string>
+
+    <!-- para o carview do recycler -->
+    <string name="schoolSubjectCardView">%1$s</string>
+
+    <string name="a">Opção A</string>
+    <string name="b">Opção B</string>
+    <string name="c">Opção C</string>
+    <string name="d">Opção D</string>
+    <string name="e">Opção E</string>
 
 </resources>

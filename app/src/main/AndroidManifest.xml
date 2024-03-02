@@ -11,6 +11,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".VisualizacaoDetalhadaActivity"
+            android:label="@string/title_activity_visualizacao_detalhada"
+            android:parentActivityName=".VisualizaPerguntasActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.espertalhao.VisualizaPerguntasActivity" />
+        </activity>
+        <activity
+            android:name=".VisualizaPerguntasActivity"
+            android:label="@string/title_activity_visualiza_perguntas"
+            android:parentActivityName=".MainMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.espertalhao.MainMenuActivity" />
+        </activity>
+        <activity
             android:name=".CadastroPerguntaActivity"
             android:label="@string/title_activity_cadastro_pergunta"
             android:parentActivityName=".MainMenuActivity"
