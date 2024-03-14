@@ -1,4 +1,4 @@
-package com.example.espertalhao;
+package com.example.espertalhao.model;
 
 import java.io.Serializable;
 
@@ -13,17 +13,6 @@ public class Pergunta implements Serializable {
     private String opcaoE;
     private char opcaoCorreta;
     private Conteudo conteudo;
-
-    public Pergunta(String enunciado, String opcaoA, String opcaoB, String opcaoC, String opcaoD, String opcaoE, char opcaoCorreta, Conteudo conteudo) {
-        this.enunciado = enunciado;
-        this.opcaoA = opcaoA;
-        this.opcaoB = opcaoB;
-        this.opcaoC = opcaoC;
-        this.opcaoD = opcaoD;
-        this.opcaoE = opcaoE;
-        this.opcaoCorreta = opcaoCorreta;
-        this.conteudo = conteudo;
-    }
 
     public Pergunta(int idPergunta, String enunciado, String opcaoA, String opcaoB, String opcaoC, String opcaoD, String opcaoE, char opcaoCorreta, Conteudo conteudo) {
         this.idPergunta = idPergunta;

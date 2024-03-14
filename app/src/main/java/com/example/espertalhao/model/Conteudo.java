@@ -1,4 +1,4 @@
-package com.example.espertalhao;
+package com.example.espertalhao.model;
 
 import java.io.Serializable;
 

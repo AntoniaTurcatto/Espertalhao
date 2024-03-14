@@ -1,7 +1,6 @@
 package com.example.espertalhao;
 
-import android.content.Context;
-import android.content.res.Resources;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +9,21 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.espertalhao.model.Pergunta;
+
 import java.util.List;
 
 public class PerguntaAdapter extends RecyclerView.Adapter<PerguntaAdapter.MyViewHolder>{
 
     private List<Pergunta> listaPerguntas;
     private PerguntaOnClickListener perguntaOnClickListener;
-    android.content.res.Resources res;
+    private Cursor cursorPerguntas;
 
     public PerguntaAdapter(List<Pergunta> listaPerguntas, PerguntaOnClickListener perguntaOnClickListener){
         this.listaPerguntas = listaPerguntas;
         this.perguntaOnClickListener = perguntaOnClickListener;
     }
+
 
     @Override
     public PerguntaAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -31,9 +33,22 @@ public class PerguntaAdapter extends RecyclerView.Adapter<PerguntaAdapter.MyView
 
     @Override
     public void onBindViewHolder(final PerguntaAdapter.MyViewHolder holder, final int position){
-        Pergunta pergunta = listaPerguntas.get(position);
+        //int id = cursorPerguntas.getInt(cursorPerguntas.getColumnIndex("_id"));
+
+
+//        String enunciado = cursorPerguntas.getString(cursorPerguntas.getColumnIndex("enunciado"));
+//        String opcao_a = cursorPerguntas.getString(cursorPerguntas.getColumnIndex("opcao_a"));
+//        String opcao_b = cursorPerguntas.getString(cursorPerguntas.getColumnIndex("opcao_b"));
+//        String opcao_c = cursorPerguntas.getString(cursorPerguntas.getColumnIndex("opcao_c"));
+//        String opcao_d = cursorPerguntas.getString(cursorPerguntas.getColumnIndex("opcao_d"));
+//        String opcao_e = cursorPerguntas.getString(cursorPerguntas.getColumnIndex("opcao_e"));
+//        String opcao_correta = cursorPerguntas.getString(cursorPerguntas.getColumnIndex("opcao_correta"));
+//        String conteudo = cursorPerguntas.getString(cursorPerguntas.getColumnIndex("conteudo"));
+
         //tipo Conteudo
         //imagem tipo conteudo
+
+        Pergunta pergunta = listaPerguntas.get(position);
         switch (pergunta.getConteudo().getTipoConteudo()){
             case 1:
                 holder.textViewTipoConteudoVisualizaPerguntas.setText(holder.itemView.getContext().getString(R.string.exactSciences));

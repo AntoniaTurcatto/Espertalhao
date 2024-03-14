@@ -2,8 +2,8 @@ package com.example.espertalhao;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.espertalhao.model.Conteudo;
+import com.example.espertalhao.model.Pergunta;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,6 +30,8 @@ public class CadastroPerguntaActivity extends AppCompatActivity {
     App app;
     android.content.res.Resources res;
 
+    DbHandler crud;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +56,7 @@ public class CadastroPerguntaActivity extends AppCompatActivity {
         app = (App)getApplicationContext();
         res = getResources();
 
-        listaConteudos = new String[app.getListaConteudo().size()+1];
+        listaConteudos = new String[crud.carregaConteudos().size()+1];
         opcoes = new String[6];
         listaConteudos[0]= res.getString(R.string.select);
         opcoes[0] = res.getString(R.string.select);
@@ -64,12 +66,13 @@ public class CadastroPerguntaActivity extends AppCompatActivity {
         opcoes[4] = "D";
         opcoes[5] = "E";
 
-        //listaConteudos == strings para o spinner
-        //listaConteudo == conteudos cadastrados
-        for(int i = 0; i < app.getListaConteudo().size(); i++){
-            Conteudo conteudo = app.getListaConteudo().get(i);
+        for(int i = 0; i < crud.carregaConteudos().size(); i++){
+            Conteudo conteudo = crud.getConteudoWhereId(i);
             listaConteudos[i+1] = conteudo.getNomeConteudo();
         }
+
+        //instancia do BD
+        crud = new DbHandler(CadastroPerguntaActivity.this);
 
         spinnerConteudoCadastroPerguntas.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, listaConteudos));
@@ -94,7 +97,9 @@ public class CadastroPerguntaActivity extends AppCompatActivity {
                         spinnerOpcaoCorretaCadastroPerguntas.getSelectedItemPosition() > 0 &&
                         spinnerConteudoCadastroPerguntas.getSelectedItemPosition() > 0){
 
-                    int idPergunta = app.getListaPergunta().size(); // não faz -1 pois não foi adicionado na lista ainda, portanto será 0
+
+                    //se a BD estiver vazia, o id será 0, senão será o maior id registrado + 1
+                    int idPergunta = crud.getAvailableIdForPerguntas();
                     String enunciado = editTextEnunciadoCadastrarPerguntas.getText().toString();
                     String opcaoA = editTextOptionACadastrarPerguntas.getText().toString();
                     String opcaoB = editTextOptionBCadastrarPerguntas.getText().toString();
@@ -102,10 +107,17 @@ public class CadastroPerguntaActivity extends AppCompatActivity {
                     String opcaoD = editTextOptionDCadastrarPerguntas.getText().toString();
                     String opcaoE = editTextOptionECadastrarPerguntas.getText().toString();
                     char opcaoCorreta = spinnerOpcaoCorretaCadastroPerguntas.getSelectedItem().toString().charAt(0);
-                    Conteudo conteudo = app.getListaConteudo().get(spinnerConteudoCadastroPerguntas.getSelectedItemPosition() - 1); // -1 por conta do --Selecionar--
+                    Conteudo conteudo = crud.getConteudoWhereId(spinnerConteudoCadastroPerguntas.getSelectedItemPosition() - 1); // -1 por conta do --Selecionar--
+
 
                     Pergunta pergunta = new Pergunta(idPergunta, enunciado, opcaoA, opcaoB, opcaoC, opcaoD, opcaoE,opcaoCorreta, conteudo);
-                    app.getListaPergunta().add(pergunta);
+
+
+                    String resultado = crud.inserePergunta(pergunta);
+                    System.out.println(resultado);
+
+                    Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_SHORT).show();
+
                     Toast.makeText(app, res.getString(R.string.registerQuestionSuccess, pergunta.getEnunciado()), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(app, res.getString(R.string.alert), Toast.LENGTH_SHORT).show();
