@@ -26,6 +26,17 @@ public class Pergunta implements Serializable {
         this.conteudo = conteudo;
     }
 
+    public Pergunta(String enunciado, String opcaoA, String opcaoB, String opcaoC, String opcaoD, String opcaoE, char opcaoCorreta, Conteudo conteudo) {
+        this.enunciado = enunciado;
+        this.opcaoA = opcaoA;
+        this.opcaoB = opcaoB;
+        this.opcaoC = opcaoC;
+        this.opcaoD = opcaoD;
+        this.opcaoE = opcaoE;
+        this.opcaoCorreta = opcaoCorreta;
+        this.conteudo = conteudo;
+    }
+
     public int getIdPergunta() {
         return idPergunta;
     }
@@ -96,5 +107,17 @@ public class Pergunta implements Serializable {
 
     public void setConteudo(Conteudo conteudo) {
         this.conteudo = conteudo;
+    }
+
+    @Override
+    public String toString() {
+        return "enunciado= " + enunciado + "\n" +
+                ", opcaoA= " + opcaoA + "\n" +
+                ", opcaoB= " + opcaoB + "\n" +
+                ", opcaoC= " + opcaoC + "\n" +
+                ", opcaoD= " + opcaoD + "\n" +
+                ", opcaoE= " + opcaoE + "\n" +
+                ", opcaoCorreta= " + opcaoCorreta +
+                ", conteudo= " + conteudo.getNomeConteudo();
     }
 }

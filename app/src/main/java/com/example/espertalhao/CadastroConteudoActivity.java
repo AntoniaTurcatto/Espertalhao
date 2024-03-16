@@ -60,13 +60,16 @@ public class CadastroConteudoActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(spinnerTipoConteudoCadastroConteudo.getSelectedItemPosition() > 0 && !editTextNomeCadastroConteudo.getText().toString().isEmpty()){ //se não estiver selecionado o "--Selecionar--" E se não estiver sem nome
 
-                    Conteudo conteudo = new Conteudo(crud.getAvailableIdForConteudos(),
-                            editTextNomeCadastroConteudo.getText().toString(),
+                    Conteudo conteudo = new Conteudo(editTextNomeCadastroConteudo.getText().toString(),
                             spinnerTipoConteudoCadastroConteudo.getSelectedItemPosition());
 
                     //app.getListaConteudo().add(conteudo);
-                    crud.insereConteudo(conteudo);
-                    Toast.makeText(CadastroConteudoActivity.this, res.getString(R.string.registerSuccess, conteudo.getNomeConteudo(), conteudo.getTipoConteudo(), conteudo.getIdConteudo()), Toast.LENGTH_SHORT).show();
+                    try {
+                        String consulta = crud.insereConteudo(conteudo);
+                        Toast.makeText(CadastroConteudoActivity.this, consulta, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                 } else {
                     Toast.makeText(CadastroConteudoActivity.this, res.getString(R.string.alert), Toast.LENGTH_SHORT).show();
                 }

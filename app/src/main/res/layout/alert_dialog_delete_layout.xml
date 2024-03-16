@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/alert_dialog_delete_background"
+    android:elevation="@dimen/cardview_default_elevation">
+
+    <TextView
+        android:id="@+id/textViewTituloDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_delete_alert_dialog"
+        android:textColor="#0A4210"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/data_list"
+        android:textSize="18sp"
+        android:layout_marginTop="24dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textViewDadosToStringDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/string_input"
+        android:textColor="#5A2C9E"
+        android:textStyle="italic"
+        android:textSize="16sp"/>
+
+    <LinearLayout
+        android:layout_marginTop="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonCancelAlertDialogDeletePergunta"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/cancel"
+            style="@style/buttonSecondary"/>
+        <Button
+            android:id="@+id/buttonYesAlertDialogDeletePergunta"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/yes"
+            style="@style/buttonPrimary"/>
+
+    </LinearLayout>
+</LinearLayout>

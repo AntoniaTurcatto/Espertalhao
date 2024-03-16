@@ -17,11 +17,13 @@ public class PerguntaAdapter extends RecyclerView.Adapter<PerguntaAdapter.MyView
 
     private List<Pergunta> listaPerguntas;
     private PerguntaOnClickListener perguntaOnClickListener;
+    private PerguntaOnLongClickListener perguntaOnLongClickListener;
     private Cursor cursorPerguntas;
 
-    public PerguntaAdapter(List<Pergunta> listaPerguntas, PerguntaOnClickListener perguntaOnClickListener){
+    public PerguntaAdapter(List<Pergunta> listaPerguntas, PerguntaOnClickListener perguntaOnClickListener, PerguntaOnLongClickListener perguntaOnLongClickListener){
         this.listaPerguntas = listaPerguntas;
         this.perguntaOnClickListener = perguntaOnClickListener;
+        this.perguntaOnLongClickListener = perguntaOnLongClickListener;
     }
 
 
@@ -72,12 +74,20 @@ public class PerguntaAdapter extends RecyclerView.Adapter<PerguntaAdapter.MyView
         //enunciado
         holder.textViewPerguntaVisualizaPerguntas.setText(pergunta.getEnunciado());
 
-        if(perguntaOnClickListener != null){
+        if(perguntaOnClickListener != null && perguntaOnLongClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener(){
 
                 @Override
                 public void onClick(View view) {
                     perguntaOnClickListener.onClickPergunta(holder.itemView, position);
+                }
+            });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    perguntaOnLongClickListener.onLongClickPergunta(holder.itemView, position);
+                    return true;
                 }
             });
         }
@@ -104,5 +114,9 @@ public class PerguntaAdapter extends RecyclerView.Adapter<PerguntaAdapter.MyView
 
     public interface PerguntaOnClickListener{
         public void onClickPergunta(View view, int position);
+    }
+
+    public interface PerguntaOnLongClickListener{
+        public void onLongClickPergunta(View view, int position);
     }
 }

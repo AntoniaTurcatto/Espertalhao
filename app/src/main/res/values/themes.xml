@@ -6,4 +6,9 @@
         <item name="colorError">@color/md_theme_light_error</item>
         <item name="android:colorBackground">@color/md_theme_light_background</item>
     </style>
+
+    <style name="Theme.DialogCustomizada" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>

@@ -13,303 +13,241 @@ import com.example.espertalhao.model.Pergunta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbHandler extends SQLiteOpenHelper {
+public class DbHandler {
+    private SQLiteDatabase db;
+    private CriaBanco banco;
 
-    private static final String NOME_BANCO = "bancoPerguntas.db";
-    private static final int VERSAO = 12;
-
-    private static final String TABELA = "perguntas";
-    private static final String ID = "id";
-    private static final String ENUNCIADO = "enunciado";
-    private static final String OPCAO_A = "opcao_a";
-    private static final String OPCAO_B = "opcao_b";
-    private static final String OPCAO_C = "opcao_c";
-    private static final String OPCAO_D = "opcao_d";
-    private static final String OPCAO_E = "opcao_e";
-    private static final String OPCAO_CORRETA = "opcao_correta";
-    private static final String FK_CONTEUDO = "fk_conteudo";
-
-    private static final String COLUMN_TABELA_CONTEUDOS = "conteudos";
-    private static final String COLUMN_ID_CONTEUDO = "id";
-    private static final String COLUMN_NOME_CONTEUDO = "nome";
-    private static final String COLUMN_TIPO_CONTEUDO = "tipo";
-
-    public DbHandler(Context context){
-        super(context, NOME_BANCO, null, VERSAO);
-        Log.d("Database Operations", "Database created");
+    public DbHandler(Context context) {
+        banco = new CriaBanco(context);
     }
 
-    //this is called the first time a DB is accessed. There should be code in here to create a new database
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-
-        String sqlCreateTableConteudos = "CREATE TABLE " + COLUMN_TABELA_CONTEUDOS + " ("
-                + COLUMN_ID_CONTEUDO + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_NOME_CONTEUDO + " text, "
-                + COLUMN_TIPO_CONTEUDO + " INTEGER"
-                +");";
-
-        String sqlCreateTablePerguntas = "CREATE TABLE " + TABELA + " ("
-                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + ENUNCIADO + " text, "
-                + OPCAO_A + " text, "
-                + OPCAO_B + " text, "
-                + OPCAO_C + " text, "
-                + OPCAO_D + " text, "
-                + OPCAO_E + " text, "
-                + OPCAO_CORRETA + " text, "
-                + FK_CONTEUDO + " INTEGER, "
-                + " CONSTRAINT fkConteudoId FOREIGN KEY (" + FK_CONTEUDO+") REFERENCES "+ COLUMN_TABELA_CONTEUDOS + " ("+COLUMN_ID_CONTEUDO +"));";
-
-        //executar o código sql
-        db.execSQL(sqlCreateTableConteudos);
-        db.execSQL(sqlCreateTablePerguntas);
-        Log.d("Database Operations","Tables createds");
-    }
-
-    public String inserePergunta(Pergunta pergunta){
+    public String insereConteudo(Conteudo meuConteudo) {
         ContentValues valores;
-        SQLiteDatabase db;
         long resultado;
 
-        db = this.getWritableDatabase();
+        db = banco.getWritableDatabase();
         valores = new ContentValues();
+        valores.put(CriaBanco.getColumnNomeConteudo(), meuConteudo.getNomeConteudo());
+        valores.put(CriaBanco.getColumnTipoConteudo(), meuConteudo.getTipoConteudo());
 
-        //não colocar o ID pois é autoincrement
-        valores.put(ENUNCIADO, pergunta.getEnunciado());
-        valores.put(OPCAO_A, pergunta.getOpcaoA());
-        valores.put(OPCAO_B, pergunta.getOpcaoB());
-        valores.put(OPCAO_C, pergunta.getOpcaoC());
-        valores.put(OPCAO_D, pergunta.getOpcaoD());
-        valores.put(OPCAO_E, pergunta.getOpcaoE());
-        valores.put(OPCAO_CORRETA, String.valueOf(pergunta.getOpcaoCorreta()));
-
-        Conteudo conteudo = pergunta.getConteudo();
-        valores.put(FK_CONTEUDO, conteudo.getIdConteudo());
-
-        resultado = db.insert(TABELA, null, valores);
+        resultado = db.insert(CriaBanco.getColumnTabelaConteudos(), null, valores);
         db.close();
 
-        if(resultado == -1)
-            return "Erro ao inserir no banco";
-        else
-            return "Registro inserido com sucesso";
-    }
-
-    public List<Pergunta> carregaPerguntas(){
-
-        SQLiteDatabase db;
-        Cursor cursor;
-        List<Pergunta> listaPerguntas = new ArrayList<>();
-        //intancia o BD "legível"
-        db = this.getReadableDatabase();
-
-//        String[] campos = {ID, ENUNCIADO, OPCAO_A,
-//                OPCAO_B,
-//                OPCAO_C,
-//                OPCAO_D,
-//                OPCAO_E,
-//                OPCAO_CORRETA,
-//                FK_CONTEUDO};
-
-//        cursor = db.query(DbHandler.TABELA, campos, null,
-//                null, null, null, null, null);
-
-        cursor = db.rawQuery("SELECT * FROM " + TABELA, null);
-
-        if (cursor.moveToFirst()){
-            do{
-                int id = cursor.getInt(0);
-
-                String enunciado = cursor.getString(cursor.getColumnIndex(ENUNCIADO));
-                String opcao_a = cursor.getString(cursor.getColumnIndex(OPCAO_A));
-                String opcao_b = cursor.getString(cursor.getColumnIndex(OPCAO_B));
-                String opcao_c = cursor.getString(cursor.getColumnIndex(OPCAO_C));
-                String opcao_d = cursor.getString(cursor.getColumnIndex(OPCAO_D));
-                String opcao_e = cursor.getString(cursor.getColumnIndex(OPCAO_E));
-                char opcao_correta = cursor.getString(cursor.getColumnIndex(OPCAO_CORRETA)).charAt(0);
-
-                int idConteudo = cursor.getInt(cursor.getColumnIndex(FK_CONTEUDO));
-
-                Conteudo conteudo = getConteudoWhereId(idConteudo);
-
-                Pergunta perguntaAtual = new Pergunta(id,enunciado,opcao_a,opcao_b,opcao_c,opcao_d,opcao_e,opcao_correta,conteudo);
-                listaPerguntas.add(perguntaAtual);
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return listaPerguntas;
-    }
-
-    public int getAvailableIdForPerguntas(){
-        SQLiteDatabase db;
-        Cursor cursor;
-        db = this.getReadableDatabase();
-        int resultado;
-
-        cursor = db.rawQuery("SELECT "
-                + ID +" FROM "
-                + TABELA
-                + " ORDER BY " + ID + " DESC "
-                + " LIMIT 1,0;",
-                null);
-        //se o cursor é nulo (nenhum registro) retornará 0, caso contrário pegará o numero do maior id na BD +1
-        if (cursor.moveToFirst()){
-            //resultado = cursor.getInt(0) + 1;
-            resultado = cursor.getInt(cursor.getColumnIndex(ID));
-            cursor.close();
+        if (resultado == -1) {
+            return "Erro ao inserir registro";
         } else {
-            resultado = 0;
+            return carregaConteudos().toString();
         }
-        db.close();
-        return resultado;
     }
 
-    public Pergunta getPerguntaWhereId(int id){
-        SQLiteDatabase db;
-        Cursor cursor;
-        Pergunta pergunta;
-        //String[] camposConteudoSplit;
+    public ArrayList<Conteudo> carregaConteudos() {
+        // criando a lista para onde serão carregadas as informações
+        ArrayList<Conteudo> listaConteudos = new ArrayList<>();
+        // obtendo a instância do banco
+        this.db = this.banco.getWritableDatabase();
+        // realizando a consulta sem nenhum filtro -> select * from Usuarios
+        Cursor cursor = this.db.query(CriaBanco.getColumnTabelaConteudos(), null, null, null, null, null, null);
+        // segundo parametro é para definir as colunas que desejo
+        // terceiro parametro é para definir as clausulas para selecionar/filtrar
+        if (cursor.moveToFirst()) {
+            // navegando no retorno dos dados do banco
+            do {
+                // obtendo informação por informação
+                int id = cursor.getInt(cursor.getColumnIndex(CriaBanco.getColumnIdConteudo()));
+                String nomeConteudo = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnNomeConteudo()));
+                int tipoConteudo = cursor.getInt(cursor.getColumnIndex(CriaBanco.getColumnTipoConteudo()));
 
-        db = this.getReadableDatabase();
-        cursor = db.rawQuery("SELECT *"
-                + " FROM "+ TABELA
-                + " WHERE " + ID + " = " + id + ";"
-                ,null);
-
-        if(cursor.moveToFirst()){
-            int idResult = cursor.getInt(0);
-            String enunciado = cursor.getString(cursor.getColumnIndex(ENUNCIADO));
-            String opcao_a = cursor.getString(cursor.getColumnIndex(OPCAO_A));
-            String opcao_b = cursor.getString(cursor.getColumnIndex(OPCAO_B));
-            String opcao_c = cursor.getString(cursor.getColumnIndex(OPCAO_C));
-            String opcao_d = cursor.getString(cursor.getColumnIndex(OPCAO_D));
-            String opcao_e = cursor.getString(cursor.getColumnIndex(OPCAO_E));
-            char opcao_correta = cursor.getString(cursor.getColumnIndex(OPCAO_CORRETA)).charAt(0);
-
-            int idConteudo = cursor.getInt(cursor.getColumnIndex(FK_CONTEUDO));
-
-            Conteudo conteudo = getConteudoWhereId(idConteudo);
-            pergunta = new Pergunta(idResult,enunciado,opcao_a,opcao_b,opcao_c,opcao_d,opcao_e,opcao_correta,conteudo);
-
-            cursor.close();
-            db.close();
-            return pergunta;
-        } else {
-            db.close();
-            return null;
+                // criando o objeto da classe
+                Conteudo meuConteudo = new Conteudo(id, nomeConteudo, tipoConteudo);
+                // adicionando na lista
+                listaConteudos.add(meuConteudo);
+            } while (cursor.moveToNext());
         }
-
-    }
-
-
-    //-------METODOS PARA ACESSAR A TABELA DE CONTEUDOS-------------
-
-    public String insereConteudo(Conteudo conteudo){
-        ContentValues valores;
-        SQLiteDatabase db;
-        long resultado;
-
-        db = this.getWritableDatabase();
-        valores = new ContentValues();
-
-        valores.put(COLUMN_ID_CONTEUDO, conteudo.getIdConteudo());
-        valores.put(COLUMN_NOME_CONTEUDO, conteudo.getNomeConteudo());
-        valores.put(COLUMN_TIPO_CONTEUDO, conteudo.getTipoConteudo());
-
-        resultado = db.insert(COLUMN_TABELA_CONTEUDOS, null, valores);
-        db.close();
-
-        if(resultado == -1)
-            return "Erro ao inserir no banco";
-        else
-            return "Registro inserido com sucesso";
-    }
-
-    public List<Conteudo> carregaConteudos(){
-        SQLiteDatabase db;
-        Cursor cursor;
-        List<Conteudo> listaConteudos = new ArrayList<>();
-
-        //intancia o BD "legível"
-        db = this.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM " + COLUMN_TABELA_CONTEUDOS, null);
-
-        if(cursor.moveToFirst()){
-            do{
-                int idConteudo = cursor.getInt(0);
-                String nomeConteudo = cursor.getString(cursor.getColumnIndex(COLUMN_NOME_CONTEUDO));
-                int tipoConteudo = cursor.getInt(cursor.getColumnIndex(COLUMN_TIPO_CONTEUDO));
-                Conteudo conteudo = new Conteudo(idConteudo, nomeConteudo, tipoConteudo);
-                listaConteudos.add(conteudo);
-            }while (cursor.moveToNext());
-        }
+        int tamanho = listaConteudos.size();
         cursor.close();
         db.close();
         return listaConteudos;
     }
 
-    public int getAvailableIdForConteudos(){
-        SQLiteDatabase db;
+    public Conteudo carregaConteudoById(int id) {
         Cursor cursor;
-        db = this.getReadableDatabase();
-        int resultado;
+        Conteudo meuConteudo = null;
+        String[] campos = {CriaBanco.getColumnIdConteudo(), CriaBanco.getColumnNomeConteudo(), CriaBanco.getColumnTipoConteudo()};
+        String where = CriaBanco.getColumnIdConteudo() + " = " + id;
+        db = banco.getReadableDatabase();
+        //cursor = db.query(CriaBanco.getColumnTabelaConteudos(), campos, where, null, null, null, null, null);
+        cursor = db.rawQuery("SELECT * FROM " + CriaBanco.getColumnTabelaConteudos()
+                        + " WHERE " + CriaBanco.getColumnIdConteudo() + "=" + id + ";"
+                , null);
+        System.out.println(cursor.getCount());
 
-        cursor = db.rawQuery("SELECT "
-                        + COLUMN_ID_CONTEUDO +" FROM "
-                        + COLUMN_TABELA_CONTEUDOS
-                        + " ORDER BY " + COLUMN_ID_CONTEUDO + " DESC "
-                //      o limite é um registro, começando no registro n0
-                        + " LIMIT 1,0;",
-                null);
-        //se o cursor é nulo (nenhum registro) retornará 0, caso contrário pegará o numero do maior id na BD +1
-        if (cursor.moveToFirst()){
-            resultado = cursor.getInt(0) + 1;
-            cursor.close();
+        if (cursor.moveToFirst()) {
+            // obtendo informação por informação
+            id = cursor.getInt(cursor.getColumnIndex(CriaBanco.getColumnIdConteudo()));
+            String nomeConteudo = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnNomeConteudo()));
+            int tipoConteudo = cursor.getInt(cursor.getColumnIndex(CriaBanco.getColumnTipoConteudo()));
+
+            // criando o objeto da classe
+            meuConteudo = new Conteudo(id, nomeConteudo, tipoConteudo);
+        }
+        cursor.close();
+        //db.close();
+        return meuConteudo;
+    }
+
+    public void alteraRegistroConteudo(Conteudo meuConteudo) {
+        ContentValues valores;
+        String where;
+
+        db = banco.getWritableDatabase();
+
+        where = CriaBanco.getColumnIdConteudo() + "=" + meuConteudo.getIdConteudo();
+
+        valores = new ContentValues();
+        valores.put(CriaBanco.getColumnNomeConteudo(), meuConteudo.getNomeConteudo());
+        valores.put(CriaBanco.getColumnTipoConteudo(), meuConteudo.getTipoConteudo());
+
+        db.update(CriaBanco.getColumnTabelaConteudos(), valores, where, null);
+        db.close();
+    }
+
+    public void deletaRegistroConteudo(int id) {
+        String where = CriaBanco.getColumnIdConteudo() + "=" + id;
+        db = banco.getReadableDatabase();
+        db.delete(CriaBanco.getColumnTabelaConteudos(), where, null);
+        db.close();
+    }
+
+    //------------métodos para acessar tabela PERGUNTAS-----------
+
+    public String inserePergunta(Pergunta pergunta) {
+        ContentValues valores;
+        db = banco.getWritableDatabase();
+        long resultado;
+        valores = new ContentValues();
+
+        valores.put(CriaBanco.getColumnEnunciadoPerguntas(), pergunta.getEnunciado());
+        valores.put(CriaBanco.getColumnOpcaoAPerguntas(), pergunta.getOpcaoA());
+        valores.put(CriaBanco.getColumnOpcaoBPerguntas(), pergunta.getOpcaoB());
+        valores.put(CriaBanco.getColumnOpcaoCPerguntas(), pergunta.getOpcaoC());
+        valores.put(CriaBanco.getColumnOpcaoDPerguntas(), pergunta.getOpcaoD());
+        valores.put(CriaBanco.getColumnOpcaoEPerguntas(), pergunta.getOpcaoE());
+        valores.put(CriaBanco.getColumnOpcaoCorretaPerguntas(), String.valueOf(pergunta.getOpcaoCorreta()));
+
+        int idConteudo = pergunta.getConteudo().getIdConteudo();
+        Conteudo conteudoEncontrado = carregaConteudoById(idConteudo);
+
+        valores.put(CriaBanco.getColumnFkConteudoPerguntas(), conteudoEncontrado.getIdConteudo());
+        System.out.println("\n\n\n" + conteudoEncontrado.toString());
+
+        resultado = db.insert(CriaBanco.getColumnTabelaPerguntas(), null, valores);
+        db.close();
+
+        if (resultado == -1) {
+            return "erro ao inserir no banco";
         } else {
-            resultado = 0;
+            return "pergunta inserida com sucesso";
+        }
+    }
+
+    public ArrayList<Pergunta> carregaPerguntas() {
+        ArrayList<Pergunta> listaPerguntas;
+        db = banco.getReadableDatabase();
+
+        listaPerguntas = new ArrayList<>();
+        Cursor cursor = db.query(CriaBanco.getColumnTabelaPerguntas(), null, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int idPergunta = cursor.getInt(cursor.getColumnIndex(CriaBanco.getColumnIdPerguntas()));
+                String enunciado = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnEnunciadoPerguntas()));
+                String opcaoA = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoAPerguntas()));
+                String opcaoB = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoBPerguntas()));
+                String opcaoC = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoCPerguntas()));
+                String opcaoD = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoDPerguntas()));
+                String opcaoE = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoEPerguntas()));
+                char opcaoCorreta = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoCorretaPerguntas())).charAt(0);
+                int fkIdConteudoDireto = cursor.getInt(cursor.getColumnIndex(CriaBanco.getColumnFkConteudoPerguntas()));
+                //pesquisando o id do FK_CONTEUDO_ID da pergunta atual
+//                Cursor cursor2 = db.rawQuery("SELECT " + CriaBanco.getColumnFkConteudoPerguntas() + " FROM " + CriaBanco.getColumnTabelaPerguntas()
+//                                + " WHERE " + CriaBanco.getColumnIdPerguntas() + " = " + idPergunta + ";"
+//                        , null);
+//                int fkIdConteudo =  cursor2.getInt(cursor2.getColumnIndex(CriaBanco.getColumnFkConteudoPerguntas()));
+//                cursor2.close();
+
+                Pergunta perguntaAtual = new Pergunta(idPergunta,
+                        enunciado,
+                        opcaoA,
+                        opcaoB,
+                        opcaoC,
+                        opcaoD,
+                        opcaoE,
+                        opcaoCorreta,
+                        carregaConteudoById(fkIdConteudoDireto));
+                listaPerguntas.add(perguntaAtual);
+            } while (cursor.moveToNext());
         }
         db.close();
-        return resultado;
+        cursor.close();
+        return listaPerguntas;
     }
 
-    public Conteudo getConteudoWhereId(int id){
-        SQLiteDatabase db;
+    public Pergunta carregaPerguntaById(int id) {
         Cursor cursor;
-        Conteudo conteudo;
+        Pergunta pergunta = null;
+//        String[] campos = {CriaBanco.getColumnIdPerguntas()
+//                , CriaBanco.getColumnEnunciadoPerguntas()
+//                , CriaBanco.getColumnOpcaoAPerguntas()
+//                , CriaBanco.getColumnOpcaoBPerguntas()
+//                , CriaBanco.getColumnOpcaoCPerguntas()
+//                , CriaBanco.getColumnOpcaoDPerguntas()
+//                , CriaBanco.getColumnOpcaoEPerguntas()
+//                , CriaBanco.getColumnOpcaoCorretaPerguntas()
+//                , CriaBanco.getColumnFkConteudoPerguntas()
+//        };
+        //String where = CriaBanco.getColumnIdConteudo() + " = " + id;
+        db = banco.getReadableDatabase();
 
-        db = this.getReadableDatabase();
+        //cursor = db.query(CriaBanco.getColumnTabelaPerguntas(), campos, where, null, null, null, null, null);
 
-        cursor = db.rawQuery("SELECT *"
-                        + " FROM "+ COLUMN_TABELA_CONTEUDOS
-                        + " WHERE " + COLUMN_ID_CONTEUDO + " = " + id + ";"
-                ,null);
+        cursor = db.rawQuery("SELECT * FROM " + CriaBanco.getColumnTabelaPerguntas()
+                       + " WHERE " + CriaBanco.getColumnIdPerguntas() + "=" + id
+                , null);
+        System.out.println(cursor.getCount());
+        if (cursor.moveToFirst()) {
+            int idPergunta = cursor.getInt(cursor.getColumnIndex(CriaBanco.getColumnIdPerguntas()));
+            //int idPergunta = cursor.getInt(0); TESTE
+            String enunciado = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnEnunciadoPerguntas()));
+            String opcaoA = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoAPerguntas()));
+            String opcaoB = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoBPerguntas()));
+            String opcaoC = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoCPerguntas()));
+            String opcaoD = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoDPerguntas()));
+            String opcaoE = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoEPerguntas()));
+            char opcaoCorreta = cursor.getString(cursor.getColumnIndex(CriaBanco.getColumnOpcaoCorretaPerguntas())).charAt(0);
+            int fkIdConteudo = cursor.getInt(cursor.getColumnIndex(CriaBanco.getColumnFkConteudoPerguntas()));
 
-        if (cursor.moveToFirst()){
-
-            //extraindo os resultados
-            int idResult = cursor.getInt(0);
-            String nomeConteudo = cursor.getString(cursor.getColumnIndex(COLUMN_NOME_CONTEUDO));
-            int tipoConteudo = cursor.getInt(cursor.getColumnIndex(COLUMN_TIPO_CONTEUDO));
-
-            //instanciando o conteudo
-            conteudo = new Conteudo(idResult,nomeConteudo,tipoConteudo);
-
-            cursor.close();
-            db.close();
-            return conteudo;
-        } else {
-            db.close();
-            return null;
+            pergunta = new Pergunta(idPergunta,
+                    enunciado,
+                    opcaoA,
+                    opcaoB,
+                    opcaoC,
+                    opcaoD,
+                    opcaoE,
+                    opcaoCorreta,
+                    carregaConteudoById(fkIdConteudo));
         }
+
+        cursor.close();
+        db.close();
+        return pergunta;
+
     }
 
-    //this is called if the database version number changes. It prevents previous user apps from breaking when you change the DB design
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABELA);//tabela perguntas
-        db.execSQL("DROP TABLE IF EXISTS " + COLUMN_TABELA_CONTEUDOS); //tabela conteudos
-        onCreate(db);
+    public void deletaRegistroPergunta(int id) {
+        String where = CriaBanco.getColumnIdPerguntas() + "=" + id;
+        db = banco.getReadableDatabase();
+        db.delete(CriaBanco.getColumnTabelaPerguntas(), where, null);
+        db.close();
     }
+
 }

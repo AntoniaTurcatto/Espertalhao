@@ -55,7 +55,7 @@ public class CadastroPerguntaActivity extends AppCompatActivity {
 
         app = (App)getApplicationContext();
         res = getResources();
-
+        crud = new DbHandler(CadastroPerguntaActivity.this);
         listaConteudos = new String[crud.carregaConteudos().size()+1];
         opcoes = new String[6];
         listaConteudos[0]= res.getString(R.string.select);
@@ -66,9 +66,9 @@ public class CadastroPerguntaActivity extends AppCompatActivity {
         opcoes[4] = "D";
         opcoes[5] = "E";
 
-        for(int i = 0; i < crud.carregaConteudos().size(); i++){
-            Conteudo conteudo = crud.getConteudoWhereId(i);
-            listaConteudos[i+1] = conteudo.getNomeConteudo();
+        for(int i = 1; i <= crud.carregaConteudos().size(); i++){
+            Conteudo conteudo = crud.carregaConteudoById(i);
+            listaConteudos[i] = conteudo.getNomeConteudo();
         }
 
         //instancia do BD
@@ -99,7 +99,7 @@ public class CadastroPerguntaActivity extends AppCompatActivity {
 
 
                     //se a BD estiver vazia, o id será 0, senão será o maior id registrado + 1
-                    int idPergunta = crud.getAvailableIdForPerguntas();
+                    //int idPergunta = crud.getAvailableIdForPerguntas();
                     String enunciado = editTextEnunciadoCadastrarPerguntas.getText().toString();
                     String opcaoA = editTextOptionACadastrarPerguntas.getText().toString();
                     String opcaoB = editTextOptionBCadastrarPerguntas.getText().toString();
@@ -107,10 +107,10 @@ public class CadastroPerguntaActivity extends AppCompatActivity {
                     String opcaoD = editTextOptionDCadastrarPerguntas.getText().toString();
                     String opcaoE = editTextOptionECadastrarPerguntas.getText().toString();
                     char opcaoCorreta = spinnerOpcaoCorretaCadastroPerguntas.getSelectedItem().toString().charAt(0);
-                    Conteudo conteudo = crud.getConteudoWhereId(spinnerConteudoCadastroPerguntas.getSelectedItemPosition() - 1); // -1 por conta do --Selecionar--
+                    Conteudo conteudo = crud.carregaConteudoById(spinnerConteudoCadastroPerguntas.getSelectedItemPosition()); // -1 por conta do --Selecionar--
+                    //tirei o -1 pois no banco o ID começou a contar a partir do 1 por algum motivo (????)
 
-
-                    Pergunta pergunta = new Pergunta(idPergunta, enunciado, opcaoA, opcaoB, opcaoC, opcaoD, opcaoE,opcaoCorreta, conteudo);
+                    Pergunta pergunta = new Pergunta(enunciado, opcaoA, opcaoB, opcaoC, opcaoD, opcaoE,opcaoCorreta, conteudo);
 
 
                     String resultado = crud.inserePergunta(pergunta);

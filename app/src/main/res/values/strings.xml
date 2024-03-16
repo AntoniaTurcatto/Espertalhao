@@ -44,4 +44,10 @@
     <string name="d">Option D</string>
     <string name="e">Option E</string>
 
+    <string name="title_delete_alert_dialog">Do you want to delete %1$s?</string>
+    <string name="data_list">Data:</string>
+    <string name="string_input">%1$s</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
 </resources>
